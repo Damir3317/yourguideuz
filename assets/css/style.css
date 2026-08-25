@@ -360,6 +360,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .is-scrolled .lang-switch button, .page-header .lang-switch button { color: var(--ink-700); }
 .lang-switch button.active { background: var(--color-accent); color: var(--white); }
 
+.mobile-actions { display: none; align-items: center; gap: var(--space-3); }
+@media (max-width: 900px) { .mobile-actions { display: flex; } }
+.lang-switch-mobile { padding: 2px; }
+.lang-switch-mobile button { padding: 0.28rem 0.55rem; }
+
 .nav-toggle {
   display: none;
   flex-direction: column;
