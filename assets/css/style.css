@@ -405,6 +405,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
        (Contact, language switch, Plan My Trip) is unreachable. */
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    /* Some mobile browsers only finish painting a fixed+scrollable panel's
+       content after its slide-in transform settles, so the links appear to
+       pop in a beat after the panel itself. Promoting the layer up front
+       (rather than mid-animation) avoids that late repaint. */
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
   }
   body.nav-open .main-nav { transform: translateX(0); }
   /* backdrop-filter on the header creates a new containing block, which would
