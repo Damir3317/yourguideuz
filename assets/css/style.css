@@ -674,17 +674,17 @@ body.nav-open .nav-scrim { opacity: 1; pointer-events: auto; }
 @media (max-width: 980px) { .feature-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .feature-grid { grid-template-columns: minmax(0, 1fr); } }
 
-/* Services & Workshops pages: keep two compact cards per row on mobile instead of stacking one-by-one */
+/* Home, Services & Workshops pages: keep two compact cards per row on mobile instead of stacking one-by-one */
 @media (max-width: 560px) {
-  body[data-page="services"] .feature-grid, body[data-page="workshops"] .feature-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); }
-  body[data-page="services"] .feature-card, body[data-page="workshops"] .feature-card { padding: var(--space-4) var(--space-3); }
-  body[data-page="services"] .feature-icon, body[data-page="workshops"] .feature-icon { width: 44px; height: 44px; border-radius: 12px; margin-bottom: var(--space-2); }
-  body[data-page="services"] .feature-icon svg, body[data-page="workshops"] .feature-icon svg { width: 22px; height: 22px; }
-  body[data-page="services"] .feature-card h3, body[data-page="workshops"] .feature-card h3 { font-size: var(--fs-sm); margin-bottom: var(--space-1); line-height: 1.25; }
-  body[data-page="services"] .feature-card p, body[data-page="workshops"] .feature-card p { font-size: var(--fs-xs); line-height: 1.4; }
+  body[data-page="home"] .feature-grid, body[data-page="services"] .feature-grid, body[data-page="workshops"] .feature-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); }
+  body[data-page="home"] .feature-card, body[data-page="services"] .feature-card, body[data-page="workshops"] .feature-card { padding: var(--space-4) var(--space-3); }
+  body[data-page="home"] .feature-icon, body[data-page="services"] .feature-icon, body[data-page="workshops"] .feature-icon { width: 44px; height: 44px; border-radius: 12px; margin-bottom: var(--space-2); }
+  body[data-page="home"] .feature-icon svg, body[data-page="services"] .feature-icon svg, body[data-page="workshops"] .feature-icon svg { width: 22px; height: 22px; }
+  body[data-page="home"] .feature-card h3, body[data-page="services"] .feature-card h3, body[data-page="workshops"] .feature-card h3 { font-size: var(--fs-sm); margin-bottom: var(--space-1); line-height: 1.25; }
+  body[data-page="home"] .feature-card p, body[data-page="services"] .feature-card p, body[data-page="workshops"] .feature-card p { font-size: var(--fs-xs); line-height: 1.4; }
 }
 @media (max-width: 380px) {
-  body[data-page="services"] .feature-grid, body[data-page="workshops"] .feature-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  body[data-page="home"] .feature-grid, body[data-page="services"] .feature-grid, body[data-page="workshops"] .feature-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 }
 
 .feature-card {
