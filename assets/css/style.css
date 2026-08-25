@@ -616,7 +616,26 @@ body.nav-open .nav-scrim { opacity: 1; pointer-events: auto; }
   gap: var(--space-5);
 }
 @media (max-width: 980px) { .tour-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 660px) { .tour-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* Mobile: two compact cards per row instead of one large card stacked full-width */
+@media (max-width: 660px) {
+  .tour-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); }
+  .tour-badge { top: var(--space-2); left: var(--space-2); font-size: 0.62rem; padding: 0.25rem 0.55rem; }
+  .tour-price-tag { bottom: var(--space-2); right: var(--space-2); font-size: 0.68rem; padding: 0.3rem 0.6rem; }
+  .tour-body { padding: var(--space-3); gap: var(--space-1); }
+  .tour-meta { gap: var(--space-2); font-size: 0.62rem; }
+  .tour-body h3 { font-size: var(--fs-sm); line-height: 1.25; }
+  .tour-body p {
+    font-size: var(--fs-xs); line-height: 1.4;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .tour-foot { flex-direction: column; align-items: stretch; gap: var(--space-2); }
+  .tour-foot .btn { width: 100%; }
+  .stars { font-size: 0.68rem; }
+}
+@media (max-width: 380px) {
+  .tour-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
 
 .tour-card {
   background: var(--color-surface);
