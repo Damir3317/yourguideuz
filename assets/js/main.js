@@ -8,6 +8,11 @@
 
   var WHATSAPP_NUMBER = "998907433317";
   var TELEGRAM_HANDLE = "sds_1904";
+  var contactChoiceOpener = null;
+
+  function currentLang() {
+    return document.documentElement.getAttribute("lang") === "ru" ? "ru" : "en";
+  }
 
   document.addEventListener("DOMContentLoaded", function () {
     initHeader();
@@ -295,6 +300,11 @@
     if (!form) return;
     var success = document.querySelector(".form-success");
 
+    var LABELS = {
+      en: { greeting: "Hello YourGuideUz! I'd like to plan a trip.", name: "Name", tour: "Tour of interest", travelers: "Travelers", dates: "Preferred dates", message: "Message" },
+      ru: { greeting: "Здравствуйте, YourGuideUz! Хочу спланировать поездку.", name: "Имя", tour: "Интересующий тур", travelers: "Количество туристов", dates: "Предпочтительные даты", message: "Сообщение" }
+    };
+
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       var data = new FormData(form);
@@ -303,21 +313,28 @@
       var tour = (data.get("tour") || "").toString().trim();
       var dates = (data.get("dates") || "").toString().trim();
       var message = (data.get("message") || "").toString().trim();
+      var t = LABELS[currentLang()];
 
       var lines = [
-        "Hello YourGuideUz! I'd like to plan a trip.",
-        "Name: " + (name || "-"),
-        tour ? "Tour of interest: " + tour : null,
-        travelers ? "Travelers: " + travelers : null,
-        dates ? "Preferred dates: " + dates : null,
-        message ? "Message: " + message : null
+        t.greeting,
+        t.name + ": " + (name || "-"),
+        tour ? t.tour + ": " + tour : null,
+        travelers ? t.travelers + ": " + travelers : null,
+        dates ? t.dates + ": " + dates : null,
+        message ? t.message + ": " + message : null
       ].filter(Boolean);
 
-      var url = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(lines.join("\n"));
+      var fullMessage = lines.join("\n");
 
       if (success) success.classList.add("visible");
-      window.open(url, "_blank", "noopener");
       form.reset();
+
+      if (typeof contactChoiceOpener === "function") {
+        contactChoiceOpener(fullMessage);
+      } else {
+        var url = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(fullMessage);
+        window.open(url, "_blank", "noopener");
+      }
     });
   }
 
@@ -349,12 +366,17 @@
     var waLink = modal.querySelector("[data-contact-whatsapp]");
     var closeButtons = modal.querySelectorAll("[data-modal-close]");
     var triggers = document.querySelectorAll('a.btn[href="contact.html"]');
-    if (!triggers.length) return;
 
-    var openModal = function () {
+    var BOOK_PREFIX = { en: "Hello YourGuideUz! I'd like to book: ", ru: "Здравствуйте, YourGuideUz! Хочу забронировать: " };
+    var DEFAULT_MSG = { en: "Hello YourGuideUz! I'd like to plan a trip.", ru: "Здравствуйте, YourGuideUz! Хочу спланировать поездку." };
+
+    var openModal = function (message) {
+      if (tgLink) tgLink.href = "https://t.me/" + TELEGRAM_HANDLE;
+      if (waLink) waLink.href = "https://wa.me/" + WHATSAPP_NUMBER + (message ? "?text=" + encodeURIComponent(message) : "");
       modal.classList.add("open");
       document.body.style.overflow = "hidden";
     };
+    contactChoiceOpener = openModal;
     var closeModal = function () {
       modal.classList.remove("open");
       document.body.style.overflow = "";
@@ -363,17 +385,16 @@
     triggers.forEach(function (btn) {
       btn.addEventListener("click", function (e) {
         e.preventDefault();
-        var message = "Hello YourGuideUz! I'd like to plan a trip.";
+        var lang = currentLang();
+        var message = DEFAULT_MSG[lang];
         var modalBody = btn.closest(".modal-body");
         if (modalBody) {
           var h3 = modalBody.querySelector("h3");
           if (h3 && h3.textContent.trim()) {
-            message = "Hello YourGuideUz! I'd like to book: " + h3.textContent.trim();
+            message = BOOK_PREFIX[lang] + h3.textContent.trim();
           }
         }
-        if (tgLink) tgLink.href = "https://t.me/" + TELEGRAM_HANDLE;
-        if (waLink) waLink.href = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(message);
-        openModal();
+        openModal(message);
       });
     });
 
