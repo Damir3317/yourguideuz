@@ -1175,6 +1175,7 @@ body.nav-open .nav-scrim { opacity: 1; pointer-events: auto; }
 .trust-strip { border-block: 1px solid var(--color-border); padding-block: var(--space-4); overflow: hidden; }
 .trust-track { display: flex; gap: var(--space-7); width: max-content; animation: marquee 26s linear infinite; }
 .trust-track span { font-family: var(--font-display); font-size: var(--fs-lg); color: var(--brand-orange); white-space: nowrap; }
+.trust-strip.reverse .trust-track { animation-direction: reverse; }
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
 /* ==========================================================================
