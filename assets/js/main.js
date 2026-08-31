@@ -413,7 +413,7 @@
     if (!modal) return;
     var img = modal.querySelector("img");
     var closeButtons = modal.querySelectorAll("[data-modal-close]");
-    var triggers = document.querySelectorAll(".review-shot-card img");
+    var triggers = document.querySelectorAll(".review-shot-card img, .tour-gallery img");
     if (!triggers.length) return;
 
     var openModal = function (src, alt) {
