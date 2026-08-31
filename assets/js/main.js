@@ -239,7 +239,12 @@
   /* ---------------------------------------------------------------------- */
   function initModals() {
     var openers = document.querySelectorAll("[data-modal-open]");
-    var closeButtons = document.querySelectorAll("[data-modal-close]");
+    // #modal-lightbox and #modal-contact-choice manage their own open/close
+    // logic (initLightbox / initContactChoice) since they can be triggered
+    // from inside another already-open modal. Binding their close buttons
+    // here too would close whichever tour modal is still tracked as
+    // "current" underneath them.
+    var closeButtons = document.querySelectorAll(".modal-overlay:not(#modal-lightbox):not(#modal-contact-choice) [data-modal-close]");
     var current = null;
 
     var open = function (modal) {
@@ -262,13 +267,17 @@
       });
     });
     closeButtons.forEach(function (btn) { btn.addEventListener("click", close); });
-    document.querySelectorAll(".modal-overlay").forEach(function (overlay) {
+    document.querySelectorAll(".modal-overlay:not(#modal-lightbox):not(#modal-contact-choice)").forEach(function (overlay) {
       overlay.addEventListener("click", function (e) {
         if (e.target === overlay) close();
       });
     });
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") close();
+      if (e.key !== "Escape") return;
+      var lightbox = document.getElementById("modal-lightbox");
+      var contactChoice = document.getElementById("modal-contact-choice");
+      if ((lightbox && lightbox.classList.contains("open")) || (contactChoice && contactChoice.classList.contains("open"))) return;
+      close();
     });
   }
 
@@ -412,13 +421,29 @@
     var modal = document.getElementById("modal-lightbox");
     if (!modal) return;
     var img = modal.querySelector("img");
+    var prevBtn = modal.querySelector(".lightbox-prev");
+    var nextBtn = modal.querySelector(".lightbox-next");
     var closeButtons = modal.querySelectorAll("[data-modal-close]");
     var triggers = document.querySelectorAll(".review-shot-card img, .tour-gallery img");
     if (!triggers.length) return;
 
-    var openModal = function (src, alt) {
-      img.src = src;
-      img.alt = alt || "";
+    var group = [];
+    var index = 0;
+
+    var show = function (i) {
+      index = (i + group.length) % group.length;
+      var thumb = group[index];
+      img.src = thumb.src;
+      img.alt = thumb.alt;
+      var multiple = group.length > 1;
+      if (prevBtn) prevBtn.style.display = multiple ? "" : "none";
+      if (nextBtn) nextBtn.style.display = multiple ? "" : "none";
+    };
+
+    var openModal = function (thumb) {
+      var container = thumb.closest(".tour-gallery, .review-shots-grid");
+      group = container ? Array.prototype.slice.call(container.querySelectorAll("img")) : [thumb];
+      show(group.indexOf(thumb));
       modal.classList.add("open");
       document.body.style.overflow = "hidden";
     };
@@ -430,16 +455,22 @@
 
     triggers.forEach(function (thumb) {
       thumb.addEventListener("click", function () {
-        openModal(thumb.src, thumb.alt);
+        openModal(thumb);
       });
     });
+
+    if (prevBtn) prevBtn.addEventListener("click", function (e) { e.stopPropagation(); show(index - 1); });
+    if (nextBtn) nextBtn.addEventListener("click", function (e) { e.stopPropagation(); show(index + 1); });
 
     closeButtons.forEach(function (btn) { btn.addEventListener("click", closeModal); });
     modal.addEventListener("click", function (e) {
       if (e.target === modal) closeModal();
     });
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && modal.classList.contains("open")) closeModal();
+      if (!modal.classList.contains("open")) return;
+      if (e.key === "Escape") closeModal();
+      else if (e.key === "ArrowLeft") show(index - 1);
+      else if (e.key === "ArrowRight") show(index + 1);
     });
   }
 

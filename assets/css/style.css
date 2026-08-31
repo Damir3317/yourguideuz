@@ -845,6 +845,23 @@ body.nav-open .nav-scrim { opacity: 1; pointer-events: auto; }
 }
 .lightbox-panel img { max-width: 90vw; max-height: 90vh; width: auto; border-radius: var(--radius-md); display: block; box-shadow: var(--shadow-lg); }
 .lightbox-panel .modal-close { top: -14px; right: -14px; }
+.lightbox-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 48px; height: 48px; border-radius: 50%;
+  background: rgba(19, 54, 69, 0.6);
+  color: var(--white);
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(6px);
+  transition: background var(--transition);
+}
+.lightbox-arrow:hover { background: rgba(19, 54, 69, 0.85); }
+.lightbox-prev { left: var(--space-3); }
+.lightbox-next { right: var(--space-3); }
+@media (max-width: 640px) {
+  .lightbox-arrow { width: 40px; height: 40px; }
+  .lightbox-prev { left: var(--space-2); }
+  .lightbox-next { right: var(--space-2); }
+}
 
 .testimonial-dots { display: flex; justify-content: center; gap: 0.5rem; margin-top: var(--space-5); }
 .testimonial-dots button {
