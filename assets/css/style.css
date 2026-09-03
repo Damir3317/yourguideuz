@@ -1208,7 +1208,7 @@ body.nav-open .nav-scrim { opacity: 1; pointer-events: auto; }
    Marquee (trust strip)
    ========================================================================== */
 .trust-strip { border-block: 1px solid var(--color-border); padding-block: var(--space-4); overflow: hidden; }
-.trust-track { display: flex; gap: var(--space-7); width: max-content; animation: marquee 26s linear infinite; }
+.trust-track { display: flex; gap: var(--space-5); width: max-content; animation: marquee 26s linear infinite; }
 .trust-track span { font-family: var(--font-display); font-size: var(--fs-lg); color: var(--brand-orange); white-space: nowrap; }
 .trust-strip.reverse .trust-track { animation-direction: reverse; }
 .flag-icon { width: 1.4em; height: 0.93em; vertical-align: -0.15em; border-radius: 3px; box-shadow: 0 0 0 1px rgba(35, 48, 58, 0.12); }
