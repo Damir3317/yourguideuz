@@ -669,8 +669,8 @@ body.nav-open .nav-scrim { opacity: 1; pointer-events: auto; }
 .tour-body { padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-2); flex: 1; }
 .tour-meta { display: flex; gap: var(--space-3); font-size: var(--fs-xs); color: var(--blue-600); font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; }
 .tour-meta span { display: inline-flex; align-items: center; gap: 0.35rem; }
-.tour-body h3 { font-size: var(--fs-lg); }
-.tour-body p { font-size: var(--fs-sm); flex: 1; }
+.tour-body h3 { font-size: var(--fs-base); line-height: 1.25; }
+.tour-body p { font-size: var(--fs-xs); line-height: 1.45; flex: 1; }
 .tour-foot { display: flex; align-items: center; justify-content: space-between; margin-top: var(--space-2); }
 .stars { color: var(--beige-500); font-size: var(--fs-sm); letter-spacing: 1px; }
 
