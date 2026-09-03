@@ -1095,8 +1095,8 @@ body.nav-open .nav-scrim { opacity: 1; pointer-events: auto; }
 .modal-itinerary { margin-top: var(--space-5); display: flex; flex-direction: column; gap: var(--space-3); }
 .itinerary-day { display: flex; gap: var(--space-3); }
 .itinerary-day .day-num { display: none; }
-.itinerary-day h4 { font-size: var(--fs-base); margin-bottom: 0.2rem; }
-.itinerary-day p { font-size: var(--fs-sm); margin: 0; }
+.itinerary-day h4 { font-size: var(--fs-sm); margin-bottom: 0.2rem; }
+.itinerary-day p { font-size: var(--fs-xs); margin: 0; }
 .modal-foot {
   display: flex; align-items: center; justify-content: space-between;
   gap: var(--space-3); flex-wrap: wrap;
