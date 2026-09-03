@@ -652,6 +652,7 @@ body.nav-open .nav-scrim { opacity: 1; pointer-events: auto; }
   font-size: var(--fs-sm);
   padding: 0.4rem 0.9rem;
   border-radius: var(--radius-pill);
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
   box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
