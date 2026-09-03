@@ -472,6 +472,20 @@
       else if (e.key === "ArrowLeft") show(index - 1);
       else if (e.key === "ArrowRight") show(index + 1);
     });
+
+    var touchStartX = 0;
+    var touchStartY = 0;
+    modal.addEventListener("touchstart", function (e) {
+      touchStartX = e.changedTouches[0].clientX;
+      touchStartY = e.changedTouches[0].clientY;
+    }, { passive: true });
+    modal.addEventListener("touchend", function (e) {
+      var dx = e.changedTouches[0].clientX - touchStartX;
+      var dy = e.changedTouches[0].clientY - touchStartY;
+      if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
+      if (dx < 0) show(index + 1);
+      else show(index - 1);
+    }, { passive: true });
   }
 
   /* ---------------------------------------------------------------------- */
