@@ -489,26 +489,6 @@ body.nav-open .nav-scrim { opacity: 1; pointer-events: auto; }
   padding-bottom: var(--space-6);
   color: var(--ink-900);
 }
-.hero.hero-plain .hero-content { position: relative; }
-.hero.hero-plain .hero-content::before {
-  content: "";
-  position: absolute;
-  top: -0.5rem; right: -0.5rem;
-  width: 120px; height: 120px;
-  background: var(--white);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
-  background-image: url("../../images/uzor1.jpg");
-  background-size: 82%;
-  background-repeat: no-repeat;
-  background-position: center;
-  pointer-events: none;
-  z-index: 0;
-}
-.hero.hero-plain .hero-content > * { position: relative; z-index: 1; }
-@media (max-width: 640px) {
-  .hero.hero-plain .hero-content::before { top: -0.25rem; right: -0.25rem; width: 78px; height: 78px; }
-}
 .hero.hero-plain .breadcrumb { color: var(--ink-500); }
 .hero.hero-plain .breadcrumb a:hover { color: var(--blue-700); }
 .hero.hero-plain h1 { color: var(--ink-900); }
@@ -930,23 +910,6 @@ body.nav-open .nav-scrim { opacity: 1; pointer-events: auto; }
   position: absolute; inset: 0; z-index: -2;
   background: linear-gradient(135deg, rgba(19, 54, 69, 0.92), rgba(47, 130, 162, 0.82));
 }
-.cta-band::before {
-  content: "";
-  position: absolute;
-  top: var(--space-4); right: var(--space-4);
-  width: 100px; height: 100px;
-  background: var(--white);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
-  background-image: url("../../images/uzor1.jpg");
-  background-size: 82%;
-  background-repeat: no-repeat;
-  background-position: center;
-  z-index: -1;
-}
-@media (max-width: 640px) {
-  .cta-band::before { top: var(--space-3); right: var(--space-3); width: 60px; height: 60px; }
-}
 .cta-band h2 { color: var(--white); max-width: 640px; margin-inline: auto; }
 .cta-band p { color: rgba(255, 255, 255, 0.82); max-width: 520px; margin: var(--space-3) auto var(--space-5); }
 .cta-actions { display: flex; gap: var(--space-3); justify-content: center; flex-wrap: wrap; }
@@ -954,30 +917,7 @@ body.nav-open .nav-scrim { opacity: 1; pointer-events: auto; }
 /* ==========================================================================
    Footer
    ========================================================================== */
-.site-footer {
-  background: var(--blue-900);
-  color: rgba(248, 241, 227, 0.75);
-  padding-block: var(--space-7) var(--space-4);
-  position: relative;
-}
-.site-footer::before {
-  content: "";
-  position: absolute;
-  top: var(--space-5); right: var(--space-5);
-  width: 90px; height: 90px;
-  background: var(--white);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
-  background-image: url("../../images/uzor1.jpg");
-  background-size: 82%;
-  background-repeat: no-repeat;
-  background-position: center;
-  z-index: 0;
-}
-.site-footer > .container { position: relative; z-index: 1; }
-@media (max-width: 640px) {
-  .site-footer::before { top: var(--space-3); right: var(--space-3); width: 56px; height: 56px; }
-}
+.site-footer { background: var(--blue-900); color: rgba(248, 241, 227, 0.75); padding-block: var(--space-7) var(--space-4); }
 .footer-grid {
   display: grid;
   grid-template-columns: 1.4fr minmax(0, 1fr) minmax(0, 1fr) 1.2fr;
