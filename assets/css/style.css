@@ -1063,6 +1063,7 @@ body.nav-open .nav-scrim { opacity: 1; pointer-events: auto; }
 }
 .modal-body { padding: var(--space-5); }
 .modal-body .tour-meta { margin-bottom: var(--space-3); }
+.modal-body > p:not([style]) { font-size: var(--fs-sm); line-height: 1.5; }
 .tour-gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-2); margin-top: var(--space-4); }
 .tour-gallery img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: var(--radius-sm); display: block; cursor: zoom-in; transition: opacity var(--transition); }
 .tour-gallery img:hover { opacity: 0.85; }
