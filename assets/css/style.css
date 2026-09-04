@@ -492,8 +492,7 @@ body.nav-open .nav-scrim { opacity: 1; pointer-events: auto; }
 .hero.hero-plain::before {
   content: "";
   position: absolute;
-  top: 50%; right: var(--space-5);
-  transform: translateY(-50%);
+  top: var(--space-4); right: var(--space-4);
   width: 130px; height: 130px;
   background-image: url("../../images/uzor1.jpg");
   background-size: contain;
@@ -504,7 +503,9 @@ body.nav-open .nav-scrim { opacity: 1; pointer-events: auto; }
   z-index: 0;
 }
 .hero.hero-plain > * { position: relative; z-index: 1; }
-@media (max-width: 640px) { .hero.hero-plain::before { display: none; } }
+@media (max-width: 640px) {
+  .hero.hero-plain::before { top: var(--space-3); right: var(--space-3); width: 70px; height: 70px; }
+}
 .hero.hero-plain .breadcrumb { color: var(--ink-500); }
 .hero.hero-plain .breadcrumb a:hover { color: var(--blue-700); }
 .hero.hero-plain h1 { color: var(--ink-900); }
@@ -940,7 +941,9 @@ body.nav-open .nav-scrim { opacity: 1; pointer-events: auto; }
   background-position: center;
   z-index: -1;
 }
-@media (max-width: 640px) { .cta-band::before { display: none; } }
+@media (max-width: 640px) {
+  .cta-band::before { bottom: var(--space-3); right: var(--space-3); width: 64px; height: 64px; }
+}
 .cta-band h2 { color: var(--white); max-width: 640px; margin-inline: auto; }
 .cta-band p { color: rgba(255, 255, 255, 0.82); max-width: 520px; margin: var(--space-3) auto var(--space-5); }
 .cta-actions { display: flex; gap: var(--space-3); justify-content: center; flex-wrap: wrap; }
@@ -969,7 +972,9 @@ body.nav-open .nav-scrim { opacity: 1; pointer-events: auto; }
   z-index: 0;
 }
 .site-footer > .container { position: relative; z-index: 1; }
-@media (max-width: 640px) { .site-footer::before { display: none; } }
+@media (max-width: 640px) {
+  .site-footer::before { top: var(--space-3); right: var(--space-3); width: 56px; height: 56px; }
+}
 .footer-grid {
   display: grid;
   grid-template-columns: 1.4fr minmax(0, 1fr) minmax(0, 1fr) 1.2fr;
