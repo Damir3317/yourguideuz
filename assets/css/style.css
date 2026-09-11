@@ -84,6 +84,31 @@
 }
 
 /* ==========================================================================
+   Dark mode — same tokens, night palette. Toggled via [data-theme="dark"]
+   on <html>; because every component below reads color through these
+   variables (not literal hex), redefining just the palette re-themes the
+   whole site without touching individual component rules.
+   ========================================================================== */
+:root[data-theme="dark"] {
+  --beige-50:  #12181c;
+  --beige-100: #1a2226;
+  --beige-200: #2a343a;
+  --beige-300: #3c474e;
+  --beige-400: #57646c;
+  --beige-500: #d8b26e;
+  --beige-600: #c99a4c;
+
+  --ink-900: #f3efe6;
+  --ink-700: #cfd3d5;
+  --ink-500: #8d9599;
+  --ink-300: #5c6468;
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+
+/* ==========================================================================
    Reset
    ========================================================================== */
 *, *::before, *::after { box-sizing: border-box; }
@@ -227,6 +252,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   color: var(--color-text);
 }
 .btn-ghost:hover { border-color: var(--color-primary); color: var(--blue-700); }
+:root[data-theme="dark"] .btn-ghost { border-color: rgba(255, 255, 255, 0.18); }
+:root[data-theme="dark"] .btn-ghost:hover { color: var(--blue-300); }
 
 .btn-ghost-light {
   background: rgba(255, 255, 255, 0.08);
@@ -267,6 +294,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   backdrop-filter: blur(14px);
   box-shadow: var(--shadow-sm);
 }
+:root[data-theme="dark"] .site-header.is-scrolled { background: rgba(18, 24, 28, 0.86); }
 
 .brand {
   display: flex;
@@ -347,6 +375,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   transition: border-color var(--transition);
 }
 .is-scrolled .lang-switch, .page-header .lang-switch { border-color: rgba(35, 48, 58, 0.18); }
+:root[data-theme="dark"] .is-scrolled .lang-switch, :root[data-theme="dark"] .page-header .lang-switch { border-color: rgba(255, 255, 255, 0.18); }
 .lang-switch button {
   border: none;
   background: transparent;
@@ -359,6 +388,28 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 .is-scrolled .lang-switch button, .page-header .lang-switch button { color: var(--ink-700); }
 .lang-switch button.active { background: var(--color-accent); color: var(--white); }
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: transparent;
+  color: var(--white);
+  flex-shrink: 0;
+  transition: background var(--transition), border-color var(--transition), color var(--transition), transform 0.3s var(--ease-out);
+}
+.theme-toggle:hover { transform: rotate(15deg); }
+.theme-toggle svg { width: 18px; height: 18px; }
+.theme-toggle .icon-moon { display: none; }
+:root[data-theme="dark"] .theme-toggle .icon-sun { display: none; }
+:root[data-theme="dark"] .theme-toggle .icon-moon { display: block; }
+.is-scrolled .theme-toggle, .page-header .theme-toggle { border-color: rgba(35, 48, 58, 0.18); color: var(--ink-700); }
+:root[data-theme="dark"] .is-scrolled .theme-toggle, :root[data-theme="dark"] .page-header .theme-toggle { border-color: rgba(255, 255, 255, 0.18); color: var(--ink-700); }
+.theme-toggle-mobile { position: relative; }
 
 .mobile-actions { display: none; align-items: center; gap: var(--space-3); }
 @media (max-width: 900px) { .mobile-actions { display: flex; } }
@@ -511,6 +562,9 @@ body.nav-open .nav-scrim { opacity: 1; pointer-events: auto; }
 }
 .hero.hero-plain .hero-stats .stat-num { color: var(--ink-900); text-shadow: none; }
 .hero.hero-plain .hero-stats .stat-label { color: var(--ink-500); text-shadow: none; }
+:root[data-theme="dark"] .hero.hero-plain .btn-ghost-light { border-color: rgba(255, 255, 255, 0.18); }
+:root[data-theme="dark"] .hero.hero-plain .btn-ghost-light:hover { background: rgba(255, 255, 255, 0.08); }
+:root[data-theme="dark"] .hero.hero-plain .hero-stats { border-top-color: rgba(255, 255, 255, 0.15); }
 
 .hero-content { max-width: 760px; padding-top: var(--header-h); }
 .hero .eyebrow { color: #e5893a; }
