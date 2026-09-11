@@ -17,7 +17,6 @@
   document.addEventListener("DOMContentLoaded", function () {
     initHeader();
     initMobileNav();
-    initTheme();
     initLanguage();
     initReveal();
     initCounters();
@@ -61,30 +60,6 @@
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape") close();
     });
-  }
-
-  /* ---------------------------------------------------------------------- */
-  function initTheme() {
-    var stored = null;
-    try { stored = localStorage.getItem("yg_theme"); } catch (e) {}
-    var theme = stored === "dark" ? "dark" : "light";
-    applyTheme(theme);
-
-    document.querySelectorAll(".theme-toggle").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        applyTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark");
-      });
-    });
-  }
-
-  function applyTheme(theme) {
-    if (theme !== "dark") theme = "light";
-    if (theme === "dark") document.documentElement.setAttribute("data-theme", "dark");
-    else document.documentElement.removeAttribute("data-theme");
-    document.querySelectorAll(".theme-toggle").forEach(function (btn) {
-      btn.setAttribute("aria-label", theme === "dark" ? "Switch to light mode" : "Switch to dark mode");
-    });
-    try { localStorage.setItem("yg_theme", theme); } catch (e) {}
   }
 
   /* ---------------------------------------------------------------------- */
