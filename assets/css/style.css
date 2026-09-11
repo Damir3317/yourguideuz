@@ -409,6 +409,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 :root[data-theme="dark"] .theme-toggle .icon-moon { display: block; }
 .is-scrolled .theme-toggle, .page-header .theme-toggle { border-color: rgba(35, 48, 58, 0.18); color: var(--ink-700); }
 :root[data-theme="dark"] .is-scrolled .theme-toggle, :root[data-theme="dark"] .page-header .theme-toggle { border-color: rgba(255, 255, 255, 0.18); color: var(--ink-700); }
+.theme-toggle-mobile { position: relative; }
 
 .mobile-actions { display: none; align-items: center; gap: var(--space-3); }
 @media (max-width: 900px) { .mobile-actions { display: flex; } }
