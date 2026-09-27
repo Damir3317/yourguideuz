@@ -17,6 +17,7 @@
   document.addEventListener("DOMContentLoaded", function () {
     initHeader();
     initMobileNav();
+    initAnalytics();
     initLanguage();
     initReveal();
     initCounters();
@@ -59,6 +60,27 @@
     });
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape") close();
+    });
+  }
+
+  /* ---------------------------------------------------------------------- */
+  function trackContactClick(method) {
+    if (typeof window.gtag === "function") {
+      window.gtag("event", "contact_click", { method: method });
+    }
+  }
+
+  function initAnalytics() {
+    document.addEventListener("click", function (e) {
+      var link = e.target.closest ? e.target.closest("a") : null;
+      if (!link) return;
+      var href = link.getAttribute("href") || "";
+
+      if (/^https:\/\/(wa\.me|api\.whatsapp\.com)\//i.test(href)) trackContactClick("whatsapp");
+      else if (/^https:\/\/t\.me\//i.test(href)) trackContactClick("telegram");
+      else if (/^tel:/i.test(href)) trackContactClick("phone");
+      else if (/^mailto:/i.test(href)) trackContactClick("email");
+      else if (href === "contact.html" && link.classList.contains("btn")) trackContactClick("booking_button");
     });
   }
 
@@ -334,6 +356,8 @@
       ].filter(Boolean);
 
       var fullMessage = lines.join("\n");
+
+      trackContactClick("form");
 
       if (success) success.classList.add("visible");
       form.reset();
