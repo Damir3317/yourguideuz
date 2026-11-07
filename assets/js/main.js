@@ -110,6 +110,10 @@
       var value = el.getAttribute("data-" + lang + "-html") || el.getAttribute("data-en-html");
       if (value !== null) el.innerHTML = value;
     });
+    document.querySelectorAll("[data-en-content]").forEach(function (el) {
+      var value = el.getAttribute("data-" + lang + "-content") || el.getAttribute("data-en-content");
+      if (value !== null) el.setAttribute("content", value);
+    });
     document.querySelectorAll("[data-en-placeholder]").forEach(function (el) {
       var value = el.getAttribute("data-" + lang + "-placeholder") || el.getAttribute("data-en-placeholder");
       if (value !== null) el.setAttribute("placeholder", value);
