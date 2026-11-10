@@ -1,10 +1,16 @@
 {
+  "redirects": [
+    {"source": "/articles/en/why-visit-uzbekistan.html", "destination": "/travel-guide/why-visit-uzbekistan", "statusCode": 301},
+    {"source": "/articles/ru/pochemu-stoit-posetit-uzbekistan.html", "destination": "/ru/travel-guide/pochemu-stoit-posetit-uzbekistan", "statusCode": 301},
+    {"source": "/articles/ru/travel-guide.html", "destination": "/ru/travel-guide", "statusCode": 301},
+    {"source": "/travel-guide.html", "destination": "/travel-guide", "statusCode": 301}
+  ],
   "rewrites": [
-    { "source": "/travel-guide", "destination": "/travel-guide.html" },
-    { "source": "/travel-guide/", "destination": "/travel-guide.html" },
-    { "source": "/ru/travel-guide", "destination": "/articles/ru/travel-guide.html" },
-    { "source": "/ru/travel-guide/", "destination": "/articles/ru/travel-guide.html" },
-    { "source": "/travel-guide/why-visit-uzbekistan", "destination": "/articles/en/why-visit-uzbekistan.html" },
-    { "source": "/ru/travel-guide/pochemu-stoit-posetit-uzbekistan", "destination": "/articles/ru/pochemu-stoit-posetit-uzbekistan.html" }
+    {"source": "/travel-guide", "destination": "/travel-guide.html"},
+    {"source": "/travel-guide/", "destination": "/travel-guide.html"},
+    {"source": "/ru/travel-guide", "destination": "/articles/ru/travel-guide.html"},
+    {"source": "/ru/travel-guide/", "destination": "/articles/ru/travel-guide.html"},
+    {"source": "/travel-guide/why-visit-uzbekistan", "destination": "/articles/en/why-visit-uzbekistan.html"},
+    {"source": "/ru/travel-guide/pochemu-stoit-posetit-uzbekistan", "destination": "/articles/ru/pochemu-stoit-posetit-uzbekistan.html"}
   ]
 }
