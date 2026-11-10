@@ -80,7 +80,7 @@
       else if (/^https:\/\/t\.me\//i.test(href)) trackContactClick("telegram");
       else if (/^tel:/i.test(href)) trackContactClick("phone");
       else if (/^mailto:/i.test(href)) trackContactClick("email");
-      else if (href === "contact.html" && link.classList.contains("btn")) trackContactClick("booking_button");
+      else if (href === "/contact" && link.classList.contains("btn")) trackContactClick("booking_button");
     });
   }
 
@@ -422,7 +422,7 @@
     var tgLink = modal.querySelector("[data-contact-telegram]");
     var waLink = modal.querySelector("[data-contact-whatsapp]");
     var closeButtons = modal.querySelectorAll("[data-modal-close]");
-    var triggers = document.querySelectorAll('a.btn[href="contact.html"]');
+    var triggers = document.querySelectorAll('a.btn[href="/contact"]');
 
     var BOOK_PREFIX = { en: "Hello YourGuideUz! I'd like to book: ", ru: "Здравствуйте, YourGuideUz! Хочу забронировать: " };
     var DEFAULT_MSG = { en: "Hello YourGuideUz! I'd like to plan a trip.", ru: "Здравствуйте, YourGuideUz! Хочу спланировать поездку." };

@@ -1,11 +1,22 @@
 {
   "redirects": [
+    {"source": "/index.html", "destination": "/", "statusCode": 301},
+    {"source": "/tours.html", "destination": "/tours", "statusCode": 301},
+    {"source": "/services.html", "destination": "/services", "statusCode": 301},
+    {"source": "/workshops.html", "destination": "/workshops", "statusCode": 301},
+    {"source": "/reviews.html", "destination": "/reviews", "statusCode": 301},
+    {"source": "/contact.html", "destination": "/contact", "statusCode": 301},
     {"source": "/articles/en/why-visit-uzbekistan.html", "destination": "/travel-guide/why-visit-uzbekistan", "statusCode": 301},
     {"source": "/articles/ru/pochemu-stoit-posetit-uzbekistan.html", "destination": "/ru/travel-guide/pochemu-stoit-posetit-uzbekistan", "statusCode": 301},
     {"source": "/articles/ru/travel-guide.html", "destination": "/ru/travel-guide", "statusCode": 301},
     {"source": "/travel-guide.html", "destination": "/travel-guide", "statusCode": 301}
   ],
   "rewrites": [
+    {"source": "/tours", "destination": "/tours.html"},
+    {"source": "/services", "destination": "/services.html"},
+    {"source": "/workshops", "destination": "/workshops.html"},
+    {"source": "/reviews", "destination": "/reviews.html"},
+    {"source": "/contact", "destination": "/contact.html"},
     {"source": "/travel-guide", "destination": "/travel-guide.html"},
     {"source": "/travel-guide/", "destination": "/travel-guide.html"},
     {"source": "/ru/travel-guide", "destination": "/articles/ru/travel-guide.html"},

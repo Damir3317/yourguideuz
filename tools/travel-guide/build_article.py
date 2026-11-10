@@ -302,7 +302,7 @@ def render(lang, ga, header, tail):
           <div class="tour-meta"><span>{escape(meta)}</span></div>
           <h3>{escape(ttl)}</h3>
           <p>{escape(txt)}</p>
-          <div class="tour-foot"><span></span><a href="/tours.html" class="btn btn-ghost btn-sm">{escape(a['tours_view'])}</a></div>
+          <div class="tour-foot"><span></span><a href="/tours" class="btn btn-ghost btn-sm">{escape(a['tours_view'])}</a></div>
         </div>
       </article>'''
 
@@ -418,8 +418,8 @@ def render(lang, ga, header, tail):
       <h2>{escape(a['cta_title'])}</h2>
       {cta_ps}
       <div class="cta-actions">
-        <a href="/tours.html" class="btn btn-accent">{escape(a['cta_btn'])}</a>
-        <a href="/contact.html" class="btn btn-ghost-light">{escape(a['cta_btn2'])}</a>
+        <a href="/tours" class="btn btn-accent">{escape(a['cta_btn'])}</a>
+        <a href="/contact" class="btn btn-ghost-light">{escape(a['cta_btn2'])}</a>
       </div>
     </div>
   </div>
