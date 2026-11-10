@@ -88,12 +88,25 @@
   function initLanguage() {
     var stored = null;
     try { stored = localStorage.getItem("yg_lang"); } catch (e) {}
-    var lang = stored || "en";
+    // Article pages have one fixed language per URL (for search engines). The
+    // header EN/RU buttons there navigate to the translated URL instead of
+    // swapping text in place.
+    var fixed = document.body.hasAttribute("data-fixed-lang") ? document.documentElement.getAttribute("lang") : null;
+    var lang = fixed || stored || "en";
     applyLanguage(lang);
 
     document.querySelectorAll(".lang-switch button").forEach(function (btn) {
       btn.addEventListener("click", function () {
-        applyLanguage(btn.getAttribute("data-lang"));
+        var target = btn.getAttribute("data-lang");
+        if (fixed && target !== fixed) {
+          var alt = document.querySelector('link[rel="alternate"][hreflang="' + target + '"]');
+          if (alt) {
+            try { localStorage.setItem("yg_lang", target); } catch (e) {}
+            window.location.href = new URL(alt.getAttribute("href"), window.location.href).pathname;
+          }
+          return;
+        }
+        applyLanguage(target);
       });
     });
   }
@@ -109,6 +122,13 @@
     document.querySelectorAll("[data-en-html]").forEach(function (el) {
       var value = el.getAttribute("data-" + lang + "-html") || el.getAttribute("data-en-html");
       if (value !== null) el.innerHTML = value;
+    });
+    document.querySelectorAll('a[href="/travel-guide"], a[href="/ru/travel-guide"]').forEach(function (el) {
+      el.setAttribute("href", lang === "ru" ? "/ru/travel-guide" : "/travel-guide");
+    });
+    document.querySelectorAll("[data-en-href]").forEach(function (el) {
+      var value = el.getAttribute("data-" + lang + "-href") || el.getAttribute("data-en-href");
+      if (value !== null) el.setAttribute("href", value);
     });
     document.querySelectorAll("[data-en-content]").forEach(function (el) {
       var value = el.getAttribute("data-" + lang + "-content") || el.getAttribute("data-en-content");
