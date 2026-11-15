@@ -1,5 +1,6 @@
 {
   "redirects": [
+    {"source": "/", "has": [{"type": "host", "value": "yourguideuz.vercel.app"}], "destination": "https://yourguideuz.com/", "statusCode": 301},
     {"source": "/:path*", "has": [{"type": "host", "value": "yourguideuz.vercel.app"}], "destination": "https://yourguideuz.com/:path*", "statusCode": 301},
     {"source": "/index.html", "destination": "/", "statusCode": 301},
     {"source": "/tours.html", "destination": "/tours", "statusCode": 301},
