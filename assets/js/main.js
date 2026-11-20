@@ -88,30 +88,139 @@
   function initLanguage() {
     var stored = null;
     try { stored = localStorage.getItem("yg_lang"); } catch (e) {}
-    // Article pages have one fixed language per URL (for search engines). The
-    // header EN/RU buttons there navigate to the translated URL instead of
-    // swapping text in place.
+    // Travel Guide pages have one fixed language per URL (for search engines).
+    // There the EN/RU buttons load the translated URL in the background and
+    // swap the text in place (same structure on both), keeping the reading
+    // position; a full page load is the fallback.
     var fixed = document.body.hasAttribute("data-fixed-lang") ? document.documentElement.getAttribute("lang") : null;
     var lang = fixed || stored || "en";
     applyLanguage(lang);
-    if (fixed) restoreReadingPosition();
+    if (fixed) {
+      restoreReadingPosition();
+      var warm = function () { fetchAlternate(fixed === "ru" ? "en" : "ru"); };
+      if (document.readyState === "complete") setTimeout(warm, 300);
+      else window.addEventListener("load", function () { setTimeout(warm, 300); }, { once: true });
+    }
 
+    var busy = false;
     document.querySelectorAll(".lang-switch button").forEach(function (btn) {
+      var warmUp = function () {
+        var t = btn.getAttribute("data-lang");
+        if (fixed && t !== fixed) fetchAlternate(t);
+      };
+      btn.addEventListener("pointerdown", warmUp, { passive: true });
+      btn.addEventListener("touchstart", warmUp, { passive: true });
       btn.addEventListener("click", function () {
         var target = btn.getAttribute("data-lang");
         if (fixed && target !== fixed) {
-          var alt = document.querySelector('link[rel="alternate"][hreflang="' + target + '"]');
-          if (alt) {
-            var path = new URL(alt.getAttribute("href"), window.location.href).pathname;
-            try { localStorage.setItem("yg_lang", target); } catch (e) {}
-            saveReadingPosition(path);
+          var path = alternatePath(target);
+          if (!path || busy) return;
+          busy = true;
+          try { localStorage.setItem("yg_lang", target); } catch (e) {}
+          var pos = captureReadingPosition(path);
+          var fallback = function () {
+            try { sessionStorage.setItem(READ_POS_KEY, JSON.stringify(pos)); } catch (e) {}
             window.location.href = path;
-          }
+          };
+          var request = fetchAlternate(target);
+          if (!request) { fallback(); return; }
+          request.then(function (html) {
+            if (!html || !swapToTranslation(html)) { fallback(); return; }
+            fixed = target;
+            try { history.pushState({ ygLang: target }, "", path); } catch (e) { fallback(); return; }
+            applyLanguage(target);
+            scrollToReading(pos);
+            if (!popstateBound) {
+              popstateBound = true;
+              window.addEventListener("popstate", function () { window.location.reload(); });
+            }
+            busy = false;
+            fetchAlternate(target === "ru" ? "en" : "ru");
+          });
           return;
         }
         applyLanguage(target);
       });
     });
+  }
+
+  var popstateBound = false;
+  var altPages = {};
+
+  function alternatePath(lang) {
+    var alt = document.querySelector('link[rel="alternate"][hreflang="' + lang + '"]');
+    return alt ? new URL(alt.getAttribute("href"), window.location.href).pathname : null;
+  }
+
+  // Fetches (once) the other-language version of the current page as HTML text.
+  function fetchAlternate(lang) {
+    var path = alternatePath(lang);
+    if (!path || !window.fetch || !window.DOMParser || !window.Promise) return null;
+    if (!altPages[path]) {
+      altPages[path] = fetch(path, { credentials: "same-origin" })
+        .then(function (r) { return r.ok ? r.text() : null; })
+        .catch(function () { return null; })
+        .then(function (html) { if (!html) delete altPages[path]; return html; });
+    }
+    return altPages[path];
+  }
+
+  var SWAP_SKIP_ATTRS = { "class": 1, "style": 1, "open": 1, "aria-expanded": 1, "aria-hidden": 1, "hidden": 1 };
+
+  function swapChildren(el) {
+    return Array.prototype.filter.call(el.children, function (c) {
+      return c.tagName !== "SCRIPT" && c.tagName !== "NOSCRIPT";
+    });
+  }
+
+  function sameShape(a, b) {
+    if (a.tagName !== b.tagName) return false;
+    var ac = swapChildren(a), bc = swapChildren(b);
+    if (ac.length !== bc.length) return false;
+    for (var i = 0; i < ac.length; i++) if (!sameShape(ac[i], bc[i])) return false;
+    return true;
+  }
+
+  // Copies texts and attributes from b into the live element a, keeping a's
+  // elements (and their event listeners / UI state) in place.
+  function syncInto(a, b) {
+    Array.prototype.forEach.call(b.attributes, function (attr) {
+      if (!SWAP_SKIP_ATTRS[attr.name] && a.getAttribute(attr.name) !== attr.value) a.setAttribute(attr.name, attr.value);
+    });
+    var ac = swapChildren(a);
+    Array.prototype.slice.call(a.childNodes).forEach(function (n) { if (n.nodeType === 3) a.removeChild(n); });
+    var i = 0;
+    Array.prototype.forEach.call(b.childNodes, function (n) {
+      if (n.nodeType === 3) a.insertBefore(document.createTextNode(n.nodeValue), ac[i] || null);
+      else if (n.nodeType === 1 && n.tagName !== "SCRIPT" && n.tagName !== "NOSCRIPT") syncInto(ac[i++], n);
+    });
+  }
+
+  function swapToTranslation(html) {
+    var doc;
+    try { doc = new DOMParser().parseFromString(html, "text/html"); } catch (e) { return false; }
+    if (!doc.body || !doc.body.hasAttribute("data-fixed-lang") || !sameShape(document.body, doc.body)) return false;
+
+    // <head>: title, meta tags, canonical, structured data.
+    document.title = doc.title;
+    doc.head.querySelectorAll("meta[name], meta[property]").forEach(function (m) {
+      var key = m.getAttribute("name") ? 'meta[name="' + m.getAttribute("name") + '"]' : 'meta[property="' + m.getAttribute("property") + '"]';
+      var live = document.head.querySelector(key);
+      if (live) live.setAttribute("content", m.getAttribute("content") || "");
+    });
+    var canon = doc.head.querySelector('link[rel="canonical"]');
+    var liveCanon = document.head.querySelector('link[rel="canonical"]');
+    if (canon && liveCanon) liveCanon.setAttribute("href", canon.getAttribute("href"));
+    var ld = doc.querySelectorAll('script[type="application/ld+json"]');
+    var liveLd = document.querySelectorAll('script[type="application/ld+json"]');
+    if (ld.length === liveLd.length) ld.forEach(function (s, i) { liveLd[i].textContent = s.textContent; });
+
+    syncInto(document.body, doc.body);
+    document.documentElement.setAttribute("lang", doc.documentElement.getAttribute("lang") || "en");
+    document.querySelectorAll(".accordion-item.open .accordion-panel").forEach(function (p) {
+      p.style.maxHeight = p.scrollHeight + "px";
+    });
+    return true;
   }
 
   // EN and RU versions of a fixed-language page share the same structure, so
@@ -131,7 +240,7 @@
     return y;
   }
 
-  function saveReadingPosition(targetPath) {
+  function captureReadingPosition(targetPath) {
     var els = document.querySelectorAll(READ_POS_SEL);
     var line = headerOffset() + 8;
     var data = { path: targetPath, count: els.length, idx: -1, frac: 0,
@@ -147,7 +256,21 @@
         }
       }
     }
-    try { sessionStorage.setItem(READ_POS_KEY, JSON.stringify(data)); } catch (e) {}
+    return data;
+  }
+
+  function scrollToReading(data) {
+    var els = document.querySelectorAll(READ_POS_SEL);
+    var top;
+    if (data.idx < 0) {
+      top = 0;
+    } else if (els.length === data.count && els[data.idx]) {
+      var el = els[data.idx];
+      top = layoutTop(el) + data.frac * el.offsetHeight - headerOffset() - 8;
+    } else {
+      top = data.ratio * (document.documentElement.scrollHeight - window.innerHeight);
+    }
+    window.scrollTo({ top: Math.max(0, top), behavior: "instant" });
   }
 
   function restoreReadingPosition() {
@@ -158,27 +281,14 @@
     } catch (e) {}
     if (!data || data.path !== window.location.pathname) return;
     if ("scrollRestoration" in history) history.scrollRestoration = "manual";
-    var apply = function () {
-      var els = document.querySelectorAll(READ_POS_SEL);
-      var top;
-      if (data.idx < 0) {
-        top = 0;
-      } else if (els.length === data.count && els[data.idx]) {
-        var el = els[data.idx];
-        top = layoutTop(el) + data.frac * el.offsetHeight - headerOffset() - 8;
-      } else {
-        top = data.ratio * (document.documentElement.scrollHeight - window.innerHeight);
-      }
-      window.scrollTo({ top: Math.max(0, top), behavior: "instant" });
-    };
-    apply();
+    scrollToReading(data);
     // Re-apply once fonts/images settle the layout, unless the reader has scrolled.
     var userMoved = false;
     var markMoved = function () { userMoved = true; };
     ["wheel", "touchstart", "keydown"].forEach(function (ev) {
       window.addEventListener(ev, markMoved, { once: true, passive: true });
     });
-    var again = function () { if (!userMoved) apply(); };
+    var again = function () { if (!userMoved) scrollToReading(data); };
     window.addEventListener("load", again, { once: true });
     setTimeout(again, 400);
   }
