@@ -94,6 +94,7 @@
     var fixed = document.body.hasAttribute("data-fixed-lang") ? document.documentElement.getAttribute("lang") : null;
     var lang = fixed || stored || "en";
     applyLanguage(lang);
+    if (fixed) restoreReadingPosition();
 
     document.querySelectorAll(".lang-switch button").forEach(function (btn) {
       btn.addEventListener("click", function () {
@@ -101,14 +102,85 @@
         if (fixed && target !== fixed) {
           var alt = document.querySelector('link[rel="alternate"][hreflang="' + target + '"]');
           if (alt) {
+            var path = new URL(alt.getAttribute("href"), window.location.href).pathname;
             try { localStorage.setItem("yg_lang", target); } catch (e) {}
-            window.location.href = new URL(alt.getAttribute("href"), window.location.href).pathname;
+            saveReadingPosition(path);
+            window.location.href = path;
           }
           return;
         }
         applyLanguage(target);
       });
     });
+  }
+
+  // EN and RU versions of a fixed-language page share the same structure, so
+  // the reading position is kept as "element N, X% into it" rather than pixels.
+  var READ_POS_KEY = "yg_read_pos";
+  var READ_POS_SEL = "main h1, main h2, main h3, main h4, main p, main figure, main li, main summary, main blockquote, main table";
+
+  function headerOffset() {
+    var h = document.querySelector(".site-header");
+    return h ? h.getBoundingClientRect().height : 0;
+  }
+
+  // Layout position (offsetTop ignores the transforms used by reveal animations).
+  function layoutTop(el) {
+    var y = 0;
+    while (el) { y += el.offsetTop; el = el.offsetParent; }
+    return y;
+  }
+
+  function saveReadingPosition(targetPath) {
+    var els = document.querySelectorAll(READ_POS_SEL);
+    var line = headerOffset() + 8;
+    var data = { path: targetPath, count: els.length, idx: -1, frac: 0,
+      ratio: window.scrollY / Math.max(1, document.documentElement.scrollHeight - window.innerHeight) };
+    if (window.scrollY > 0) {
+      for (var i = 0; i < els.length; i++) {
+        var h = els[i].offsetHeight;
+        var t = layoutTop(els[i]) - window.scrollY;
+        if (h > 0 && t + h > line) {
+          data.idx = i;
+          data.frac = Math.min(1, Math.max(0, (line - t) / h));
+          break;
+        }
+      }
+    }
+    try { sessionStorage.setItem(READ_POS_KEY, JSON.stringify(data)); } catch (e) {}
+  }
+
+  function restoreReadingPosition() {
+    var data = null;
+    try {
+      data = JSON.parse(sessionStorage.getItem(READ_POS_KEY) || "null");
+      sessionStorage.removeItem(READ_POS_KEY);
+    } catch (e) {}
+    if (!data || data.path !== window.location.pathname) return;
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    var apply = function () {
+      var els = document.querySelectorAll(READ_POS_SEL);
+      var top;
+      if (data.idx < 0) {
+        top = 0;
+      } else if (els.length === data.count && els[data.idx]) {
+        var el = els[data.idx];
+        top = layoutTop(el) + data.frac * el.offsetHeight - headerOffset() - 8;
+      } else {
+        top = data.ratio * (document.documentElement.scrollHeight - window.innerHeight);
+      }
+      window.scrollTo({ top: Math.max(0, top), behavior: "instant" });
+    };
+    apply();
+    // Re-apply once fonts/images settle the layout, unless the reader has scrolled.
+    var userMoved = false;
+    var markMoved = function () { userMoved = true; };
+    ["wheel", "touchstart", "keydown"].forEach(function (ev) {
+      window.addEventListener(ev, markMoved, { once: true, passive: true });
+    });
+    var again = function () { if (!userMoved) apply(); };
+    window.addEventListener("load", again, { once: true });
+    setTimeout(again, 400);
   }
 
   function applyLanguage(lang) {
