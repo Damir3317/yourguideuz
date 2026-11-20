@@ -125,7 +125,7 @@
           var request = fetchAlternate(target);
           if (!request) { fallback(); return; }
           request.then(function (html) {
-            if (!html || !swapToTranslation(html)) { fallback(); return; }
+            if (!html || !swapToTranslation(html, path)) { fallback(); return; }
             fixed = target;
             try { history.pushState({ ygLang: target }, "", path); } catch (e) { fallback(); return; }
             applyLanguage(target);
@@ -183,9 +183,34 @@
 
   // Copies texts and attributes from b into the live element a, keeping a's
   // elements (and their event listeners / UI state) in place.
+  // Relative URLs in the fetched page belong to *its* address, not the current
+  // one, so they are made absolute before being copied over.
+  var SWAP_URL_ATTRS = { src: 1, href: 1, poster: 1, action: 1 };
+  var swapBase = null;
+
+  function absUrl(value) {
+    if (!value || /^(#|[a-z][a-z0-9+.-]*:|\/\/)/i.test(value)) return value;
+    try {
+      var u = new URL(value, swapBase);
+      return u.origin === window.location.origin ? u.pathname + u.search + u.hash : u.href;
+    } catch (e) { return value; }
+  }
+
+  function absSrcset(value) {
+    return value.split(",").map(function (part) {
+      var bits = part.trim().split(/\s+/);
+      bits[0] = absUrl(bits[0]);
+      return bits.join(" ");
+    }).join(", ");
+  }
+
   function syncInto(a, b) {
     Array.prototype.forEach.call(b.attributes, function (attr) {
-      if (!SWAP_SKIP_ATTRS[attr.name] && a.getAttribute(attr.name) !== attr.value) a.setAttribute(attr.name, attr.value);
+      if (SWAP_SKIP_ATTRS[attr.name]) return;
+      var value = attr.value;
+      if (SWAP_URL_ATTRS[attr.name]) value = absUrl(value);
+      else if (attr.name === "srcset") value = absSrcset(value);
+      if (a.getAttribute(attr.name) !== value) a.setAttribute(attr.name, value);
     });
     var ac = swapChildren(a);
     Array.prototype.slice.call(a.childNodes).forEach(function (n) { if (n.nodeType === 3) a.removeChild(n); });
@@ -196,7 +221,7 @@
     });
   }
 
-  function swapToTranslation(html) {
+  function swapToTranslation(html, path) {
     var doc;
     try { doc = new DOMParser().parseFromString(html, "text/html"); } catch (e) { return false; }
     if (!doc.body || !doc.body.hasAttribute("data-fixed-lang") || !sameShape(document.body, doc.body)) return false;
@@ -215,6 +240,7 @@
     var liveLd = document.querySelectorAll('script[type="application/ld+json"]');
     if (ld.length === liveLd.length) ld.forEach(function (s, i) { liveLd[i].textContent = s.textContent; });
 
+    swapBase = new URL(path, window.location.href).href;
     syncInto(document.body, doc.body);
     document.documentElement.setAttribute("lang", doc.documentElement.getAttribute("lang") || "en");
     document.querySelectorAll(".accordion-item.open .accordion-panel").forEach(function (p) {
