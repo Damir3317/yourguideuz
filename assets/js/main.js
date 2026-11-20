@@ -616,7 +616,8 @@
         var filter = chip.getAttribute("data-filter");
 
         cards.forEach(function (card) {
-          var match = filter === "all" || card.getAttribute("data-category") === filter;
+          var cats = (card.getAttribute("data-category") || "").split(/\s+/);
+          var match = filter === "all" || cats.indexOf(filter) !== -1;
           card.style.display = match ? "" : "none";
         });
       });
