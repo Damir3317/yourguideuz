@@ -29,6 +29,7 @@
     initFooterYear();
     initFabLinks();
     initFilters();
+    initTourAnchors();
     initContactChoice();
     initLightbox();
     initFabScrollHide();
@@ -604,6 +605,32 @@
   }
 
   /* ---------------------------------------------------------------------- */
+  /* ---------------------------------------------------------------------- */
+  // Footer links like /tours#tour-bukhara: show that card (clearing any filter),
+  // scroll to it and briefly highlight it.
+  function initTourAnchors() {
+    var go = function () {
+      var id = decodeURIComponent((window.location.hash || "").slice(1));
+      var card = id ? document.getElementById(id) : null;
+      if (!card || !card.classList.contains("tour-card")) return;
+      if (card.style.display === "none") {
+        var all = document.querySelector('.filter-chip[data-filter="all"]');
+        if (all) all.click();
+      }
+      card.classList.add("visible");
+      card.scrollIntoView({ behavior: "smooth", block: "center" });
+      card.classList.remove("is-targeted");
+      void card.offsetWidth;
+      card.classList.add("is-targeted");
+      setTimeout(function () { card.classList.remove("is-targeted"); }, 2600);
+    };
+    if (window.location.hash) {
+      if (document.readyState === "complete") setTimeout(go, 100);
+      else window.addEventListener("load", function () { setTimeout(go, 100); }, { once: true });
+    }
+    window.addEventListener("hashchange", go);
+  }
+
   function initFilters() {
     var chips = document.querySelectorAll(".filter-chip");
     var cards = document.querySelectorAll("[data-category]");
