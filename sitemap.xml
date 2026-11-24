@@ -6,7 +6,7 @@
   </url>
   <url>
     <loc>https://yourguideuz.com/tours</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-24</lastmod>
   </url>
   <url>
     <loc>https://yourguideuz.com/services</loc>
@@ -26,14 +26,14 @@
   </url>
   <url>
     <loc>https://yourguideuz.com/travel-guide</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-24</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://yourguideuz.com/travel-guide"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://yourguideuz.com/ru/travel-guide"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://yourguideuz.com/travel-guide"/>
   </url>
   <url>
     <loc>https://yourguideuz.com/ru/travel-guide</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-24</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://yourguideuz.com/travel-guide"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://yourguideuz.com/ru/travel-guide"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://yourguideuz.com/travel-guide"/>
@@ -51,5 +51,19 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://yourguideuz.com/travel-guide/why-visit-uzbekistan"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://yourguideuz.com/ru/travel-guide/pochemu-stoit-posetit-uzbekistan"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://yourguideuz.com/travel-guide/why-visit-uzbekistan"/>
+  </url>
+  <url>
+    <loc>https://yourguideuz.com/travel-guide/seven-lakes-tajikistan</loc>
+    <lastmod>2026-11-24</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yourguideuz.com/travel-guide/seven-lakes-tajikistan"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://yourguideuz.com/ru/travel-guide/sem-ozer-tadzhikistana"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://yourguideuz.com/travel-guide/seven-lakes-tajikistan"/>
+  </url>
+  <url>
+    <loc>https://yourguideuz.com/ru/travel-guide/sem-ozer-tadzhikistana</loc>
+    <lastmod>2026-11-24</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yourguideuz.com/travel-guide/seven-lakes-tajikistan"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://yourguideuz.com/ru/travel-guide/sem-ozer-tadzhikistana"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://yourguideuz.com/travel-guide/seven-lakes-tajikistan"/>
   </url>
 </urlset>

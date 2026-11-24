@@ -126,13 +126,15 @@ def figure(key, lang):
     return (f'<figure class="article-figure">{picture(key, lang, BODY_SIZES)}'
             f'<figcaption>{escape(CAP[lang][key])}</figcaption></figure>')
 
-def figure_pair(k1, k2, lang):
+def figure_pair(k1, k2, lang, portrait=False):
     cells = "".join(
         f'<figure class="article-figure">{picture(k, lang, PAIR_SIZES)}<figcaption>{escape(CAP[lang][k])}</figcaption></figure>'
         for k in (k1, k2))
-    return f'<div class="article-figure-pair">{cells}</div>'
+    mod = " article-figure-pair--portrait" if portrait else ""
+    return f'<div class="article-figure-pair{mod}">{cells}</div>'
 
 def expand_placeholders(body, lang):
+    body = re.sub(r"\[\[FIG2P (\w+)\|(\w+)\]\]", lambda m: figure_pair(m.group(1), m.group(2), lang, portrait=True), body)
     body = re.sub(r"\[\[FIG2 (\w+)\|(\w+)\]\]", lambda m: figure_pair(m.group(1), m.group(2), lang), body)
     body = re.sub(r"\[\[FIG (\w+)\]\]", lambda m: figure(m.group(1), lang), body)
     return body
@@ -249,7 +251,7 @@ def render(lang, ga, header, tail):
     if lang == "ru":
         header = header.replace('href="/travel-guide"', 'href="/ru/travel-guide"')
         tail = tail.replace('href="/travel-guide"', 'href="/ru/travel-guide"')
-    body_raw = open(os.path.join(SCR, f"{lang}_body.html"), encoding="utf-8").read()
+    body_raw = open(os.path.join(SCR, a.get("body_file", f"{lang}_body.html")), encoding="utf-8").read()
     toc = build_toc(body_raw)
     faq_html = "".join(
         f'<details class="faq-item"><summary>{escape(q)}</summary><div class="faq-answer"><p>{escape(ans)}</p></div></details>'
@@ -267,8 +269,9 @@ def render(lang, ga, header, tail):
 
     canon = abs_url(a["path"]); alt_url = abs_url(o["path"])
     en_url = abs_url(ART["en"]["path"]); ru_url = abs_url(ART["ru"]["path"])
-    og_img = f"{SITE}/images/{IMG['hero']['file']}"
+    og_img = SITE + a["og_image"] if a.get("og_image") else f"{SITE}/images/{IMG['hero']['file']}"
     hero = IMG["hero"]
+    og_w, og_h = a.get("og_size", (hero["w"], hero["h"]))
     title = escape(a["seo_title"])
     desc = escape(a["description"], quote=True)
 
@@ -292,7 +295,9 @@ def render(lang, ga, header, tail):
     jd = lambda o_: json.dumps(o_, ensure_ascii=False, indent=2)
 
     tour_cards = ""
-    for key, ttl, meta, txt in a["tours"]:
+    for card in a["tours"]:
+        key, ttl, meta, txt = card[:4]
+        href = card[4] if len(card) > 4 else "/tours"
         d = IMG[key]
         srcset = ", ".join(f"/images/guide/{d['stem']}-{w}.webp {w}w" for w in d["widths"])
         tour_cards += f'''
@@ -302,7 +307,7 @@ def render(lang, ga, header, tail):
           <div class="tour-meta"><span>{escape(meta)}</span></div>
           <h3>{escape(ttl)}</h3>
           <p>{escape(txt)}</p>
-          <div class="tour-foot"><span></span><a href="/tours" class="btn btn-ghost btn-sm">{escape(a['tours_view'])}</a></div>
+          <div class="tour-foot"><span></span><a href="{href}" class="btn btn-ghost btn-sm">{escape(a['tours_view'])}</a></div>
         </div>
       </article>'''
 
@@ -332,8 +337,8 @@ def render(lang, ga, header, tail):
 <meta property="og:description" content="{desc}">
 <meta property="og:url" content="{canon}">
 <meta property="og:image" content="{og_img}">
-<meta property="og:image:width" content="{hero['w']}">
-<meta property="og:image:height" content="{hero['h']}">
+<meta property="og:image:width" content="{og_w}">
+<meta property="og:image:height" content="{og_h}">
 <meta property="og:image:alt" content="{escape(a['og_alt'], quote=True)}">
 <meta property="article:published_time" content="{DATE_ISO}">
 <meta property="article:modified_time" content="{DATE_ISO}">
@@ -418,8 +423,7 @@ def render(lang, ga, header, tail):
       <h2>{escape(a['cta_title'])}</h2>
       {cta_ps}
       <div class="cta-actions">
-        <a href="/tours" class="btn btn-accent">{escape(a['cta_btn'])}</a>
-        <a href="/contact" class="btn btn-ghost-light">{escape(a['cta_btn2'])}</a>
+        {a.get("cta_html") or f'<a href="/tours" class="btn btn-accent">{escape(a["cta_btn"])}</a>' + chr(10) + '        ' + f'<a href="/contact" class="btn btn-ghost-light">{escape(a["cta_btn2"])}</a>'}
       </div>
     </div>
   </div>
